@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.itheima.maven</groupId>
+    <artifactId>common_parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>bos_management</artifactId>
+  <packaging>pom</packaging>
+  <description>后台系统工程，需要继承common_parent,同时还需要聚合子模块</description>
+  <!-- 聚合子模块 -->
+  <modules>
+  	<module>bos_management_domain</module>
+  	<module>bos_management_dao</module>
+  	<module>bos_management_service</module>
+  	<module>bos_management_web</module>
+  	<module>bos_management_utils</module>
+  </modules>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.itheima.maven</groupId>
+  		<artifactId>common_parent</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  		<type>pom</type>
+  		<scope>provided</scope>
+  	</dependency>
+  </dependencies>
+</project>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="plugins/jquery.min.js"></script><!-- jQuery is required -->
+<script src="js/citypicker/js/city-picker.data.js"></script>
+<script src="js/citypicker/js/city-picker.js"></script>
+<link rel="stylesheet" type="text/css" href="plugins/city-picker.css">
+</head>
+<body>
+   <div style="position: relative;">
+	  <input readonly type="text" data-toggle="city-picker" placeholder="选择省/市/区">
+	</div>
+	
+	<div style="position: relative;">
+	  <input readonly type="text" id="province" placeholder="选择省/市/区">
+	</div>
+	<script type="text/javascript">
+		$(function(){
+			$("#province").citypicker();
+		});
+	</script>
+</body>
+</html>

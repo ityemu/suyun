@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" 
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa" 
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:soap="http://cxf.apache.org/bindings/soap"
+	xsi:schemaLocation="
+						http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+						http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+						http://www.springframework.org/schema/data/jpa 
+						http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+						http://cxf.apache.org/bindings/soap 
+						http://cxf.apache.org/schemas/configuration/soap.xsd
+						http://cxf.apache.org/jaxws 
+						http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<!-- 连接池 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@192.168.109.124:1521:ORCL" />
+		<property name="user" value="itheima8" />
+		<property name="password" value="itheima" />
+		<!--<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/bos_management"/>
+		<property name="user" value="root" />
+		<property name="password" value="root" /> -->
+	</bean>
+	
+	<!-- spring整合JPA -->
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.itheima.bos.domain" />
+		<!-- 指定持久层提供者为Hibernate -->
+		<property name="persistenceProvider">
+			<bean class="org.hibernate.ejb.HibernatePersistence" />
+		</property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<!-- 自动建表 -->
+				<property name="generateDdl" value="true" />
+				<property name="database" value="ORACLE" />
+				<property name="databasePlatform" value="org.hibernate.dialect.Oracle10gDialect" /> 
+				<!--<property name="database" value="MYSQL" />
+				<property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
+				-->
+				<property name="showSql" value="true" />
+			</bean>
+		</property>
+		<property name="jpaDialect">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaDialect" />
+		</property>
+	</bean>
+	
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	
+	<!-- 组件扫描 @Server @Controller @Repository -->
+	<context:component-scan base-package="com.itheima.bos.service,com.itheima.bos.web"/>
+	
+	<!-- 事务注解支持 -->
+	<tx:annotation-driven  proxy-target-class="true" transaction-manager="transactionManager" />
+	
+	<!-- 整合 spring data jpa -->
+	<jpa:repositories base-package="com.itheima.bos.dao" />
+	
+	<!-- 注册CRM服务的客户端代理对象，通过Webservice可以调用CRM服务 -->
+	<jaxws:client id="crmClient" 
+				  address="http://192.168.109.208:8080/crm/webservice/crm"
+				  serviceClass="com.itheima.crm.service.CustomerService">
+	</jaxws:client>
+	
+	<!-- 注册订单服务 -->
+	<jaxws:server id="orderService" address="/order">
+		<jaxws:serviceBean>
+			<ref bean="orderServiceImpl"/>
+		</jaxws:serviceBean>
+	</jaxws:server>
+	
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		 <property name="loginUrl" value="/login.jsp"/>
+		 <property name="successUrl" value="/index.jsp"/>
+		 <property name="unauthorizedUrl" value="/unauthorized.jsp"/>
+		 <property name="securityManager" ref="securityManager"/>
+		 <!-- shiro提供的基于过滤器进行权限校验方式 -->
+		 <property name="filterChainDefinitions">
+		 	<value>
+		 		<!-- 
+		 			authc:代表shiro框架提供的一个过滤器，其实就是一个过滤器的别名，
+		 					这个作用是检查当前用户是否已经完成认证，如果用户已经认证了，放行，如果没有认证，跳转到登录页面
+		 			anon:代表shiro框架提供的一个过滤器，其实就是一个过滤器的别名,作用是运行用户可以匿名访问
+		 			perms:代表shiro框架提供的一个过滤器，其实就是一个过滤器的别名,作用是进行权限校验
+		 		 -->
+		 		 /webservice/** = anon
+		 		 /login.jsp* = anon
+		 		 /js/** = anon
+		 		 /images/** = anon
+		 		 /css/** = anon
+		 		 /validatecode.jsp* = anon
+		 		 /userAction_login.action = anon
+		 		 /pages/base/area.jsp = perms["area"]
+		 		 /** = authc
+		 	</value>
+		 </property>
+	</bean>
+	
+	<!-- 注册安全管理器 -->
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="customRealm"/>
+		<property name="cacheManager" ref="cacheManager"/>
+	</bean>
+	
+	<!-- 注册缓存管理器对象 -->
+	<bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+	</bean>
+	
+	<!-- 注册自定义realm -->
+	<bean id="customRealm" class="com.itheima.bos.realm.CustomRealm"></bean>
+	
+	<!-- 开启shiro注解 -->
+	<bean id="defaultAdvisorAutoProxyCreator"
+		 class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator">
+		<!-- 强制基于cglib方式创建代理对象 -->
+		<property name="proxyTargetClass" value="true"/>
+	</bean>
+	
+	<!-- 切面：通知+切点 -->
+	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager"/>
+	</bean>
+	
+	<!-- 注册自定义的Job -->
+	<bean id="myJob" class="com.itheima.bos.jobs.MailJob"/>
+	
+	<!-- 注册JobDetail对象， 负责通过反射调用自定义的Job中的方法的-->
+	<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<!-- 注入目标对象 -->
+		<property name="targetObject" ref="myJob"/>
+		<!-- 注入目标方法 -->
+		<property name="targetMethod" value="sendMail"/>
+	</bean>
+	
+	<!-- 注册触发器，指定任务的触发时间 -->
+	<bean id="myTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="jobDetail"/>
+		<!-- 注入表达式，指定触发时间 -->
+		<property name="cronExpression">
+
+		<!--		<value> 10 * * * * ? *</value> -->
+		<value>0 30 17 * * ? *</value> <!-- 向老板发送每日报表 -->
+
+		</property>
+	</bean>
+	
+	<!-- 配置统一的调度工厂 -->
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<!-- 注入触发器，可以有多个 -->
+		<property name="triggers">
+			<list>
+				<ref bean="myTrigger"/>
+			</list>
+		</property>
+	</bean>
+	
+	<!-- 组件扫描 @Controller -->
+	<context:component-scan base-package="com.itheima"/>
+	
+	
+	
+	<!-- ActiveMQ 连接工厂 -->
+    <!-- 真正可以产生Connection的ConnectionFactory，由对应的 JMS服务厂商提供-->
+    <!-- 如果连接网络：tcp://ip:61616；未连接网络：tcp://localhost:61616 以及用户名，密码-->
+   
+    <bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    	<constructor-arg index="0" value="admin"></constructor-arg>
+    	<constructor-arg index="1" value="admin"></constructor-arg>
+    	 <constructor-arg index="2" value="tcp://192.168.109.208:61616"></constructor-arg> 
+    	<!--<constructor-arg index="2" value="tcp://127.0.0.1:61616"></constructor-arg>-->
+    </bean> 
+
+    <!-- Spring Caching连接工厂 -->
+    <!-- Spring用于管理真正的ConnectionFactory的ConnectionFactory -->  
+    <bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+        <!-- 目标ConnectionFactory对应真实的可以产生JMS Connection的ConnectionFactory -->  
+        <property name="targetConnectionFactory" ref="amqConnectionFactory"></property>
+        <!-- 同上，同理 -->
+        <!-- <constructor-arg ref="amqConnectionFactory" /> -->
+        <!-- Session缓存数量 -->
+        <property name="sessionCacheSize" value="100" />
+    </bean>
+    
+     <!-- Spring JmsTemplate 的消息生产者 start-->
+
+    <!-- 定义JmsTemplate的Queue类型 -->
+    <bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->  
+        <constructor-arg ref="connectionFactory" />
+        <!-- 非pub/sub模型（发布/订阅），即队列模式 -->
+        <property name="pubSubDomain" value="false" />
+    </bean>
+	
+	
+</beans>

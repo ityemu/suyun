@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report6" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bd2c3723-aebd-4959-95ab-8f9e16e347f0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="company" class="java.lang.String"/>
+	<field name="id" class="java.lang.String"/>
+	<field name="username" class="java.lang.String"/>
+	<field name="gender" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="telephone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="birthday" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<textField>
+				<reportElement x="445" y="59" width="100" height="20" uuid="0702bd55-127d-4505-b991-568ed5b12c9c"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{company}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="187" y="13" width="212" height="56" uuid="4aaaa5c1-5eb3-4a25-9887-382038a32f99"/>
+				<textElement>
+					<font fontName="STSong" size="36" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[客户信息表]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="48" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="22" width="100" height="20" uuid="591ab533-91b4-47cf-be62-5f7f67c2fcce"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[客户编号]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="22" width="100" height="20" uuid="4c54dbbf-e06b-4ac3-a619-73ca0f98b33b"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[客户姓名]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="22" width="100" height="20" uuid="d4990749-e8dc-4cb5-85f9-97fc3bf77a45"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[客户地址]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="22" width="100" height="20" uuid="1a761ec5-1e22-4e2e-96ec-6d67c0a9436d"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[客户电话]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="22" width="100" height="20" uuid="055d71df-5a20-4174-a998-ba55de436efe"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[客户生日]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="22" width="100" height="20" uuid="b3da2abe-799c-4933-a490-8184e77a9ce3"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[客户性别]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="57" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="20" width="100" height="20" uuid="cc2b62c7-202e-46bb-9a96-c11449b60e5f"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="20" width="100" height="20" uuid="cf104957-8dfa-4fa8-b282-73daf6989f26"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="20" width="100" height="20" uuid="027756a2-8a24-456a-b75b-f3b57225e639"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="20" width="100" height="20" uuid="42dde436-9c53-4795-b0c4-c920a5752857"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{telephone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="20" width="100" height="20" uuid="64e0a574-346e-4c4d-a4b9-f44f2ec4009a"/>
+				<textFieldExpression><![CDATA[$F{birthday}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="20" width="100" height="20" uuid="2826e9ad-bca3-416e-b7f9-b7ae0402b308"/>
+				<textElement>
+					<font fontName="STSong" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gender}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
